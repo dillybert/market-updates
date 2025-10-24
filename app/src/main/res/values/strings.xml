@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Market</string>
+    <string name="bottom_bar_panel">Панель</string>
+    <string name="bottom_bar_sales">Продажа</string>
+    <string name="bottom_bar_warehouse">Склад</string>
+    <string name="bottom_bar_expenses">Расходы</string>
+    <string name="bottom_bar_dashboard">Отчёты</string>
 </resources>

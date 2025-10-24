@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
+    alias(libs.plugins.kotlinx.serialization)
 }
 
 val gitCommitCount = "git rev-list --count HEAD".runCommand().toInt()
@@ -51,6 +52,8 @@ kotlin {
 }
 
 dependencies {
+    implementation(project(":updater"))
+
     // Hilt + KSP
     implementation(libs.hilt.android)
     implementation(libs.hilt.android.navigation.compose)
@@ -61,6 +64,9 @@ dependencies {
 
     // Splash Screen
     implementation(libs.androidx.core.splashscreen)
+
+    // KotlinX Serialization
+    implementation(libs.kotlinx.serialization.json)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
