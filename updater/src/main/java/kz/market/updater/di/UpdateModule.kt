@@ -4,6 +4,7 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import kz.market.updater.data.repository.UpdateRepositoryImpl
 import kz.market.updater.domain.repository.UpdateRepository
 import javax.inject.Singleton
 
