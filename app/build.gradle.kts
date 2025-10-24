@@ -28,33 +28,33 @@ android {
 
     signingConfigs {
         create("release") {
-            // Для GitHub Actions подставятся из env
-            storePassword = System.getenv("SIGNING_STORE_PASSWORD")
-            keyAlias = System.getenv("SIGNING_KEY_ALIAS")
-            keyPassword = System.getenv("SIGNING_KEY_PASSWORD")
+            val storePasswordProp = System.getenv("SIGNING_STORE_PASSWORD") ?: project.findProperty("SIGNING_STORE_PASSWORD") as String?
+            val keyAliasProp = System.getenv("SIGNING_KEY_ALIAS") ?: project.findProperty("SIGNING_KEY_ALIAS") as String?
+            val keyPasswordProp = System.getenv("SIGNING_KEY_PASSWORD") ?: project.findProperty("SIGNING_KEY_PASSWORD") as String?
+
+            storeFile = file("release.keystore")
+            storePassword = storePasswordProp
+            keyAlias = keyAliasProp
+            keyPassword = keyPasswordProp
         }
     }
 
+
     buildTypes {
-        getByName("release") {
+        release {
             isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
             signingConfig = signingConfigs.getByName("release")
         }
-    }
-
-    buildTypes {
-        release {
-            isMinifyEnabled = true
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
+        debug {
+            isMinifyEnabled = false
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
@@ -74,18 +74,12 @@ kotlin {
 dependencies {
     implementation(project(":updater"))
 
-    // Hilt + KSP
     implementation(libs.hilt.android)
     implementation(libs.hilt.android.navigation.compose)
     ksp(libs.hilt.android.compiler)
 
-    // DataStore
     implementation(libs.androidx.datastore.preferences)
-
-    // Splash Screen
     implementation(libs.androidx.core.splashscreen)
-
-    // KotlinX Serialization
     implementation(libs.kotlinx.serialization.json)
 
     implementation(libs.androidx.core.ktx)
@@ -105,16 +99,6 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
 }
 
-
-
-
-
-
-/**
- * Helper extension function to execute a shell command.
- *
- * @param workingDir The working directory of the command.
- */
 fun String.runCommand(workingDir: File = File(".")): String {
     return ProcessBuilder(*split("\\s".toRegex()).toTypedArray())
         .directory(workingDir)
