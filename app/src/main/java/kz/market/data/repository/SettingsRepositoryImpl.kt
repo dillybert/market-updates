@@ -16,7 +16,7 @@ private object PreferencesKeys {
 }
 
 class SettingsRepositoryImpl @Inject constructor(
-    @ApplicationContext private val context: Context
+    @param:ApplicationContext private val context: Context
 ) : SettingsRepository {
     private val Context.dataStore by preferencesDataStore(name = "settings")
 

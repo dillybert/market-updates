@@ -1,12 +1,11 @@
 package kz.market.ui.components.snackbar
 
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.State
-import androidx.compose.material3.SnackbarDuration
 
 
 /**
@@ -20,6 +19,8 @@ class MarketSnackBarHostState(
     val currentVisuals: State<SnackBarVisuals?> = _currentVisuals
 
     fun showSnackBar(visuals: SnackBarVisuals) {
+        if (_currentVisuals.value == visuals) return
+
         currentJob?.cancel()
         _currentVisuals.value = visuals
 
@@ -30,6 +31,7 @@ class MarketSnackBarHostState(
             dismiss()
         }
     }
+
 
     fun dismiss() {
         _currentVisuals.value = null

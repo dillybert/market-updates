@@ -1,6 +1,7 @@
 package kz.market.ui.theme
 
 import android.app.Activity
+import android.content.res.Configuration
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
@@ -10,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 import kz.market.domain.model.ThemeOptions
@@ -90,44 +92,6 @@ private val darkScheme = darkColorScheme(
     surfaceContainerHighest = surfaceContainerHighestDark,
 )
 
-val ColorScheme.success: Color
-    get() = Green700
-
-val ColorScheme.onSuccess: Color
-    get() = Green300
-
-val ColorScheme.successContainer: Color
-    get() = Green900
-
-val ColorScheme.onSuccessContainer: Color
-    get() = Green100
-
-
-val ColorScheme.warning: Color
-    get() = Yellow700
-
-val ColorScheme.onWarning: Color
-    get() = Yellow300
-
-val ColorScheme.warningContainer: Color
-    get() = Yellow900
-
-val ColorScheme.onWarningContainer: Color
-    get() = Yellow100
-
-
-val ColorScheme.info: Color
-    get() = primary
-
-val ColorScheme.onInfo: Color
-    get() = onPrimary
-
-val ColorScheme.infoContainer: Color
-    get() = primaryContainer
-
-val ColorScheme.onInfoContainer: Color
-    get() = onPrimaryContainer
-
 @Immutable
 data class ColorFamily(
     val color: Color,
@@ -146,31 +110,26 @@ fun MarketTheme(
     content: @Composable () -> Unit
 ) {
     val context = LocalView.current.context
+    val uiMode = LocalConfiguration.current.uiMode and Configuration.UI_MODE_NIGHT_MASK
 
     val darkTheme = when (themeOption) {
-        ThemeOptions.SYSTEM -> isSystemInDarkTheme()
+        ThemeOptions.SYSTEM -> uiMode == Configuration.UI_MODE_NIGHT_YES
         ThemeOptions.DARK -> true
         ThemeOptions.LIGHT -> false
     }
 
-    SideEffect {
-        val window = (context as Activity).window
-        WindowCompat.getInsetsController(window, window.decorView).apply {
-            isAppearanceLightStatusBars = !darkTheme
-            isAppearanceLightNavigationBars = !darkTheme
+    val view = LocalView.current
+    if (!view.isInEditMode) {
+        SideEffect {
+            val window = (context as Activity).window
+            WindowCompat.getInsetsController(window, window.decorView).apply {
+                isAppearanceLightStatusBars = !darkTheme
+                isAppearanceLightNavigationBars = !darkTheme
+            }
         }
     }
 
-    val colorScheme = when (themeOption) {
-        ThemeOptions.SYSTEM -> {
-            if (isSystemInDarkTheme())
-                darkScheme
-            else
-                lightScheme
-        }
-        ThemeOptions.LIGHT -> lightScheme
-        ThemeOptions.DARK -> darkScheme
-    }
+    val colorScheme = if (darkTheme) darkScheme else lightScheme
 
     MaterialTheme(
         colorScheme = colorScheme,

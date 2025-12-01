@@ -25,7 +25,15 @@ object BottomNavigationDashboardDestination : NavigationDestination
 
 
 
-// --- Inner Screens ---
+// --- Settings Screens ---
+@Keep
+@Serializable
+object SettingsRootDestination : NavigationDestination
+
 @Keep
 @Serializable
 object SettingsDestination : NavigationDestination
+
+@Keep
+@Serializable
+object UpdateDestination : NavigationDestination

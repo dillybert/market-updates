@@ -12,7 +12,7 @@ import java.io.FileInputStream
 import javax.inject.Inject
 
 class ApkInstallerImpl @Inject constructor(
-    @ApplicationContext private val context: Context,
+    @param:ApplicationContext private val context: Context,
 ) : ApkInstaller {
     val actionInstallResult: String = "${context.packageName}.UPDATE_INSTALL_RESULT"
     private var pendingApkFile: File? = null

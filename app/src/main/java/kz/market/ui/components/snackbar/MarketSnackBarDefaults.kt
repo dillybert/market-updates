@@ -4,18 +4,19 @@ package kz.market.ui.components.snackbar
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kz.market.ui.icons.MarketIcons
-import kz.market.ui.theme.infoContainer
-import kz.market.ui.theme.onInfoContainer
-import kz.market.ui.theme.onSuccessContainer
-import kz.market.ui.theme.onWarningContainer
-import kz.market.ui.theme.successContainer
-import kz.market.ui.theme.warningContainer
+import kz.market.ui.theme.snackBarError
+import kz.market.ui.theme.snackBarInfo
+import kz.market.ui.theme.snackBarOnError
+import kz.market.ui.theme.snackBarOnInfo
+import kz.market.ui.theme.snackBarOnSuccess
+import kz.market.ui.theme.snackBarOnWarning
+import kz.market.ui.theme.snackBarSuccess
+import kz.market.ui.theme.snackBarWarning
 
 internal data class SnackBarColorSet(
     val container: Color,
@@ -55,26 +56,26 @@ object MarketSnackBarDefaults {
     @Composable
     internal fun colors(
         success: SnackBarColorSet = SnackBarColorSet(
-            container = MaterialTheme.colorScheme.successContainer,
-            onContainer = MaterialTheme.colorScheme.onSuccessContainer,
+            container = snackBarSuccess,
+            onContainer = snackBarOnSuccess,
             outline = Color.Transparent
         ),
 
         error: SnackBarColorSet = SnackBarColorSet(
-            container = MaterialTheme.colorScheme.errorContainer,
-            onContainer = MaterialTheme.colorScheme.onErrorContainer,
+            container = snackBarError,
+            onContainer = snackBarOnError,
             outline = Color.Transparent
         ),
 
         warning: SnackBarColorSet = SnackBarColorSet(
-            container = MaterialTheme.colorScheme.warningContainer,
-            onContainer = MaterialTheme.colorScheme.onWarningContainer,
+            container = snackBarWarning,
+            onContainer = snackBarOnWarning,
             outline = Color.Transparent
         ),
 
         info: SnackBarColorSet = SnackBarColorSet(
-            container = MaterialTheme.colorScheme.infoContainer,
-            onContainer = MaterialTheme.colorScheme.onInfoContainer,
+            container = snackBarInfo,
+            onContainer = snackBarOnInfo,
             outline = Color.Transparent
         ),
 

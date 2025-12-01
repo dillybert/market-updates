@@ -15,7 +15,7 @@ import org.json.JSONObject
 import javax.inject.Inject
 
 class GitHubUpdateDataSource @Inject constructor(
-    @ApplicationContext private val context: Context
+    @param:ApplicationContext private val context: Context
 ) {
     suspend fun fetchUpdateMetaData(): UpdateMetaData = withContext(Dispatchers.IO) {
         if (!isNetworkAvailable()) return@withContext UpdateMetaData.EMPTY

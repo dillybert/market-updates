@@ -4,6 +4,7 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -22,6 +24,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -105,9 +108,18 @@ private fun SnackBarLayout(
             .animateContentSize(),
         color = palette.container,
         contentColor = palette.onContainer,
-        shape = shape
+        shape = shape,
+        border = BorderStroke(1.dp, palette.outline)
     ) {
         Box {
+            if (!visuals.withDismissAction) {
+                SnackBarTimer(
+                    modifier = Modifier.align(Alignment.BottomStart),
+                    color = palette.onContainer,
+                    duration = duration
+                )
+            }
+
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -152,14 +164,6 @@ private fun SnackBarLayout(
                         onDismiss = onDismiss
                     )
                 }
-            }
-
-            if (!visuals.withDismissAction) {
-                SnackBarTimer(
-                    modifier = Modifier.align(Alignment.BottomStart),
-                    color = palette.onContainer,
-                    duration = duration
-                )
             }
         }
     }
@@ -250,26 +254,33 @@ internal fun SnackBarTimer(
 @ThemedPreview
 @Composable
 fun SnackBarPreviewAll() {
-    MarketTheme(themeOption = ThemeOptions.LIGHT) {
-        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            SnackBarType.entries.forEach { type ->
-                SnackBarLayout(
-                    visuals = SnackBarVisuals(
-                        type = type,
-                        actionsOnNewLine = type == SnackBarType.Warning, // пример
-                        message = "${type.name} SnackBar",
-                        actionLabel = "Action",
-                        duration = SnackBarDuration.Indefinite,
-                        withDismissAction = true,
-                        performAction = {}
-                    ),
-                    colors = MarketSnackBarDefaults.colors(),
-                    icons = MarketSnackBarDefaults.icons(),
-                    shape = MarketSnackBarDefaults.Shape,
-                    duration = 0L,
-                    onPerformAction = {},
-                    onDismiss = {}
-                )
+    MarketTheme(themeOption = ThemeOptions.SYSTEM) {
+        Scaffold(
+            modifier = Modifier.fillMaxSize(),
+        ) { innerPadding ->
+            Column(
+                modifier = Modifier.padding(innerPadding),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                SnackBarType.entries.forEach { type ->
+                    SnackBarLayout(
+                        visuals = SnackBarVisuals(
+                            type = type,
+                            actionsOnNewLine = type == SnackBarType.Warning, // пример
+                            message = "${type.name} SnackBar",
+                            actionLabel = "Action",
+                            duration = SnackBarDuration.Indefinite,
+                            withDismissAction = true,
+                            performAction = {}
+                        ),
+                        colors = MarketSnackBarDefaults.colors(),
+                        icons = MarketSnackBarDefaults.icons(),
+                        shape = MarketSnackBarDefaults.Shape,
+                        duration = 0L,
+                        onPerformAction = {},
+                        onDismiss = {}
+                    )
+                }
             }
         }
     }

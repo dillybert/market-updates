@@ -114,7 +114,7 @@ fun RootContent(
                             selected = currentDestination?.isDestinationInHierarchy(
                                 BottomNavigationPanelDestination
                             ) == true,
-                            onClick = { navController.navigateTo(BottomNavigationPanelDestination) },
+                            onClick = { navController.navigateTo(BottomNavigationPanelDestination, inclusive = true) },
                             icon = {
                                 Icon(
                                     painter = MarketIcons.File_03,
@@ -134,7 +134,7 @@ fun RootContent(
                             selected = currentDestination?.isDestinationInHierarchy(
                                 BottomNavigationSalesDestination
                             ) == true,
-                            onClick = { navController.navigateTo(BottomNavigationSalesDestination) },
+                            onClick = { navController.navigateTo(BottomNavigationSalesDestination, inclusive = true) },
                             icon = {
                                 Icon(
                                     painter = MarketIcons.Cart,
@@ -154,7 +154,7 @@ fun RootContent(
                             selected = currentDestination?.isDestinationInHierarchy(
                                 BottomNavigationWarehouseDestination
                             ) == true,
-                            onClick = { navController.navigateTo(BottomNavigationWarehouseDestination) },
+                            onClick = { navController.navigateTo(BottomNavigationWarehouseDestination, inclusive = true) },
                             icon = {
                                 Icon(
                                     painter = MarketIcons.Package_01,
@@ -174,7 +174,7 @@ fun RootContent(
                             selected = currentDestination?.isDestinationInHierarchy(
                                 BottomNavigationExpensesDestination
                             ) == true,
-                            onClick = { navController.navigateTo(BottomNavigationExpensesDestination) },
+                            onClick = { navController.navigateTo(BottomNavigationExpensesDestination, inclusive = true) },
                             icon = {
                                 Icon(
                                     painter = MarketIcons.Wallet_02,
@@ -194,7 +194,7 @@ fun RootContent(
                             selected = currentDestination?.isDestinationInHierarchy(
                                 BottomNavigationDashboardDestination
                             ) == true,
-                            onClick = { navController.navigateTo(BottomNavigationDashboardDestination) },
+                            onClick = { navController.navigateTo(BottomNavigationDashboardDestination, inclusive = true) },
                             icon = {
                                 Icon(
                                     painter = MarketIcons.BarChartSquare_03,

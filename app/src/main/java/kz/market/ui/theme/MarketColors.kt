@@ -76,27 +76,17 @@ val surfaceContainerHighestDark = Color(0xFF303637)
 
 
 
-val Green50 = Color(0xfff0fdf4)
-val Green100 = Color(0xffdcfce7)
-val Green200 = Color(0xffbbf7d0)
-val Green300 = Color(0xff86efac)
-val Green400 = Color(0xff4ade80)
-val Green500 = Color(0xff22c55e)
-val Green600 = Color(0xff16a34a)
-val Green700 = Color(0xff15803d)
-val Green800 = Color(0xff166534)
-val Green900 = Color(0xff14532d)
-val Green950 = Color(0xff052e16)
+val snackBarError = Color(0xFFE04747)     // soft-strong red
+val snackBarOnError = Color.White
+
+val snackBarSuccess = Color(0xFF2FA66E)   // balanced green
+val snackBarOnSuccess = Color.White
 
 
-val Yellow50 = Color(0xfffefce8)
-val Yellow100 = Color(0xfffef9c3)
-val Yellow200 = Color(0xfffef08a)
-val Yellow300 = Color(0xfffde047)
-val Yellow400 = Color(0xfffacc15)
-val Yellow500 = Color(0xffeab308)
-val Yellow600 = Color(0xffca8a04)
-val Yellow700 = Color(0xffa16207)
-val Yellow800 = Color(0xff854d0e)
-val Yellow900 = Color(0xff713f12)
-val Yellow950 = Color(0xff422006)
+val snackBarInfo = Color(0xFF3A7BDA)      // strong but calm blue
+val snackBarOnInfo = Color.White
+
+
+val snackBarWarning = Color(0xFFED8A25)   // warm-strong orange
+val snackBarOnWarning = Color.White
+

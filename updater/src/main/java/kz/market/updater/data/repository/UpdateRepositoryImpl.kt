@@ -24,7 +24,7 @@ import java.util.UUID
 import javax.inject.Inject
 
 class UpdateRepositoryImpl @Inject constructor(
-    @ApplicationContext private val context: Context,
+    @param:ApplicationContext private val context: Context,
     private val githubUpdateDataSource: GitHubUpdateDataSource,
     private val workManager: WorkManager,
     private val apkInstaller: ApkInstallerImpl
