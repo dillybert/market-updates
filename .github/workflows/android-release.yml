@@ -57,39 +57,39 @@ jobs:
 
           echo "Detected version: $LAST_TAG ($VERSION_CODE)"
 
-      # -----------------------------------
-      # Генерация CHANGELOG через requarks/changelog-action
-      # -----------------------------------
-      - name: Generate Changelog
-        id: changelog
-        uses: requarks/changelog-action@v1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          tag: ${{ steps.get_version.outputs.tag }}
-          writeToFile: true        # обновить CHANGELOG.md
-          excludeTypes: "other,docs,style,build,chore" # чистый changelog
-          includeRefIssues: true
-
-      # -----------------------------------
-      # Коммит обновленного CHANGELOG.md
-      # -----------------------------------
-      - name: Commit updated CHANGELOG.md
-        uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_message: "docs: update CHANGELOG for ${{ steps.get_version.outputs.tag }}"
-          file_pattern: CHANGELOG.md
-
-      # -----------------------------------
-      # Создание релиза с changelog
-      # -----------------------------------
-      - name: Create Release with Changelog
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: ${{ steps.get_version.outputs.tag }}
-          name: Release ${{ steps.get_version.outputs.tag }}
-          body: ${{ steps.changelog.outputs.changes }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#      # -----------------------------------
+#      # Генерация CHANGELOG через requarks/changelog-action
+#      # -----------------------------------
+#      - name: Generate Changelog
+#        id: changelog
+#        uses: requarks/changelog-action@v1
+#        with:
+#          token: ${{ secrets.GITHUB_TOKEN }}
+#          tag: ${{ steps.get_version.outputs.tag }}
+#          writeToFile: true        # обновить CHANGELOG.md
+#          excludeTypes: "other,docs,style,build,chore" # чистый changelog
+#          includeRefIssues: true
+#
+#      # -----------------------------------
+#      # Коммит обновленного CHANGELOG.md
+#      # -----------------------------------
+#      - name: Commit updated CHANGELOG.md
+#        uses: stefanzweifel/git-auto-commit-action@v5
+#        with:
+#          commit_message: "docs: update CHANGELOG for ${{ steps.get_version.outputs.tag }}"
+#          file_pattern: CHANGELOG.md
+#
+#      # -----------------------------------
+#      # Создание релиза с changelog
+#      # -----------------------------------
+#      - name: Create Release with Changelog
+#        uses: softprops/action-gh-release@v1
+#        with:
+#          tag_name: ${{ steps.get_version.outputs.tag }}
+#          name: Release ${{ steps.get_version.outputs.tag }}
+#          body: ${{ steps.changelog.outputs.changes }}
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # -----------------------------------
       # Загрузка APK
