@@ -55,7 +55,7 @@ fun UpdateScreenContent(
         }
     ) { innerPadding ->
         Text(
-            text = "UpdateScreenContent",
+            text = "UpdateScreenContent preview",
             modifier = Modifier.padding(innerPadding)
         )
     }

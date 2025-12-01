@@ -55,7 +55,7 @@ jobs:
           echo "tag=$LAST_TAG" >> $GITHUB_OUTPUT
           echo "code=$VERSION_CODE" >> $GITHUB_OUTPUT
 
-          echo "Detected version: $LAST_TAG ($VERSION_CODE)"
+          echo "Detected version: $LAST_TAG ($VERSION_CODE)" 
 
 #      # -----------------------------------
 #      # Генерация CHANGELOG через requarks/changelog-action
