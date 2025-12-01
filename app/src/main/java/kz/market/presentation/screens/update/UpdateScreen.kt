@@ -1,6 +1,8 @@
 package kz.market.presentation.screens.update
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -12,9 +14,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import kz.market.domain.model.ThemeOptions
+import kz.market.ui.components.snackbar.MarketSnackBar
+import kz.market.ui.components.snackbar.SnackBarType
+import kz.market.ui.components.snackbar.rememberMarketSnackBarHostState
 import kz.market.ui.icons.MarketIcons
 import kz.market.ui.preview.ThemedPreview
 import kz.market.ui.theme.MarketTheme
@@ -30,7 +34,8 @@ fun UpdateScreenContent(
     updateStatus: UpdateStatus = UpdateStatus.Idle,
     startDownload: (UpdateMetaData) -> Unit,
     installUpdate: (File, String) -> Unit,
-    resetUpdateStatus: () -> Unit
+    resetUpdateStatus: () -> Unit,
+    snackBar: MarketSnackBar
 ) {
     Scaffold(
         topBar = {
@@ -54,16 +59,30 @@ fun UpdateScreenContent(
             )
         }
     ) { innerPadding ->
-        Text(
-            text = "UpdateScreenContent preview",
-            modifier = Modifier.padding(innerPadding)
-        )
+        Column {
+            Text(
+                text = "UpdateScreenContent preview",
+                modifier = Modifier.padding(innerPadding)
+            )
+            Button(
+                onClick = {
+                    snackBar.showSnackBar(
+                        message = "Start download",
+                        type = SnackBarType.Success,
+                        actionLabel = "Cancel"
+                    )
+                }
+            ) {
+                Text(text = "Start download")
+            }
+        }
     }
 }
 
 @Composable
 fun UpdateScreen(
     onBackClick: () -> Unit,
+    snackBar: MarketSnackBar,
     updateViewModel: UpdateViewModel = hiltViewModel()
 ) {
     val updateStatus by updateViewModel.updateStatus.collectAsState()
@@ -73,7 +92,8 @@ fun UpdateScreen(
         updateStatus = updateStatus,
         startDownload = updateViewModel::startDownload,
         installUpdate = updateViewModel::installUpdate,
-        resetUpdateStatus = updateViewModel::resetUpdateStatus
+        resetUpdateStatus = updateViewModel::resetUpdateStatus,
+        snackBar = snackBar
     )
 }
 
@@ -87,7 +107,10 @@ private fun UpdateScreenPreview() {
             updateStatus = UpdateStatus.Idle,
             startDownload = {},
             installUpdate = { _, _ -> },
-            resetUpdateStatus = {}
+            resetUpdateStatus = {},
+            snackBar = MarketSnackBar(
+                hostState = rememberMarketSnackBarHostState()
+            )
         )
     }
 }

@@ -82,7 +82,8 @@ fun NavGraphBuilder.settingsNavGraph(
             UpdateScreen(
                 onBackClick = {
                     navController.popBackStack()
-                }
+                },
+                snackBar = snackBar
             )
         }
     }
