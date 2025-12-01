@@ -15,20 +15,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Клонируем репозиторий с полным Git-историей (чтобы работали git rev-list / describe)
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      # Устанавливаем JDK
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 17
 
-      # Раскодируем keystore из секретов
       - name: Decode keystore
         env:
           SIGNING_KEYSTORE_BASE64: ${{ secrets.SIGNING_KEYSTORE_BASE64 }}
@@ -36,11 +33,9 @@ jobs:
           mkdir -p app
           echo "$SIGNING_KEYSTORE_BASE64" | base64 --decode > app/release.keystore
 
-      # Даем права gradlew
       - name: Gradle Wrapper permissions
         run: chmod +x ./gradlew
 
-      # Собираем APK
       - name: Build release APK
         run: ./gradlew assembleRelease
         env:
@@ -48,42 +43,157 @@ jobs:
           SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
           SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
 
-      # Получаем данные о версии напрямую из Git
+      # -----------------------------------
+      # Получение версии из Git
+      # -----------------------------------
       - name: Get version info
         id: get_version
         run: |
-          VERSION_TAG=$(git describe --abbrev=0 --tags || echo "0.0.0")
+          LAST_TAG=$(git describe --abbrev=0 --tags || echo "v0.0.0")
           VERSION_CODE=$(git rev-list --count HEAD)
-          echo "tag=$VERSION_TAG" >> $GITHUB_OUTPUT
+
+          echo "tag=$LAST_TAG" >> $GITHUB_OUTPUT
           echo "code=$VERSION_CODE" >> $GITHUB_OUTPUT
-          echo "Detected version: $VERSION_TAG ($VERSION_CODE)"
 
-      # Создаем git-тег, если его ещё нет
-      - name: Create Git Tag
-        if: startsWith(steps.get_version.outputs.tag, 'v') == false
-        run: |
-          NEW_TAG="v${{ steps.get_version.outputs.tag }}"
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git tag "$NEW_TAG"
-          git push origin "$NEW_TAG"
+          echo "Detected version: $LAST_TAG ($VERSION_CODE)"
 
-      # Создаем релиз
-      - name: Create Release
+      # -----------------------------------
+      # Генерация CHANGELOG через requarks/changelog-action
+      # -----------------------------------
+      - name: Generate Changelog
+        id: changelog
+        uses: requarks/changelog-action@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ steps.get_version.outputs.tag }}
+          writeToFile: true        # обновить CHANGELOG.md
+          excludeTypes: "other,docs,style,build,chore" # чистый changelog
+          includeRefIssues: true
+
+      # -----------------------------------
+      # Коммит обновленного CHANGELOG.md
+      # -----------------------------------
+      - name: Commit updated CHANGELOG.md
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "docs: update CHANGELOG for ${{ steps.get_version.outputs.tag }}"
+          file_pattern: CHANGELOG.md
+
+      # -----------------------------------
+      # Создание релиза с changelog
+      # -----------------------------------
+      - name: Create Release with Changelog
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: v${{ steps.get_version.outputs.tag }}
-          name: Release v${{ steps.get_version.outputs.tag }}
-          draft: false
-          prerelease: false
+          tag_name: ${{ steps.get_version.outputs.tag }}
+          name: Release ${{ steps.get_version.outputs.tag }}
+          body: ${{ steps.changelog.outputs.changes }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # Загружаем APK в релиз
+      # -----------------------------------
+      # Загрузка APK
+      # -----------------------------------
       - name: Upload APK to GitHub Release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: v${{ steps.get_version.outputs.tag }}
+          tag_name: ${{ steps.get_version.outputs.tag }}
           files: app/build/outputs/apk/release/app-release.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+
+
+
+
+
+
+#name: Android Release Build
+#
+#on:
+#  push:
+#    branches:
+#      - main
+#
+#permissions:
+#  contents: write
+#  packages: write
+#
+#jobs:
+#  build:
+#    name: Build & Release APK
+#    runs-on: ubuntu-latest
+#
+#    steps:
+#      # Клонируем репозиторий с полным Git-историей (чтобы работали git rev-list / describe)
+#      - name: Checkout repository
+#        uses: actions/checkout@v4
+#        with:
+#          fetch-depth: 0
+#
+#      # Устанавливаем JDK
+#      - name: Set up JDK
+#        uses: actions/setup-java@v4
+#        with:
+#          distribution: temurin
+#          java-version: 17
+#
+#      # Раскодируем keystore из секретов
+#      - name: Decode keystore
+#        env:
+#          SIGNING_KEYSTORE_BASE64: ${{ secrets.SIGNING_KEYSTORE_BASE64 }}
+#        run: |
+#          mkdir -p app
+#          echo "$SIGNING_KEYSTORE_BASE64" | base64 --decode > app/release.keystore
+#
+#      # Даем права gradlew
+#      - name: Gradle Wrapper permissions
+#        run: chmod +x ./gradlew
+#
+#      # Собираем APK
+#      - name: Build release APK
+#        run: ./gradlew assembleRelease
+#        env:
+#          SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
+#          SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
+#          SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
+#
+#      # Получаем данные о версии напрямую из Git
+#      - name: Get version info
+#        id: get_version
+#        run: |
+#          VERSION_TAG=$(git describe --abbrev=0 --tags || echo "0.0.0")
+#          VERSION_CODE=$(git rev-list --count HEAD)
+#          echo "tag=$VERSION_TAG" >> $GITHUB_OUTPUT
+#          echo "code=$VERSION_CODE" >> $GITHUB_OUTPUT
+#          echo "Detected version: $VERSION_TAG ($VERSION_CODE)"
+#
+#      # Создаем git-тег, если его ещё нет
+#      - name: Create Git Tag
+#        if: startsWith(steps.get_version.outputs.tag, 'v') == false
+#        run: |
+#          NEW_TAG="v${{ steps.get_version.outputs.tag }}"
+#          git config user.name "github-actions[bot]"
+#          git config user.email "github-actions[bot]@users.noreply.github.com"
+#          git tag "$NEW_TAG"
+#          git push origin "$NEW_TAG"
+#
+#      # Создаем релиз
+#      - name: Create Release
+#        uses: softprops/action-gh-release@v1
+#        with:
+#          tag_name: v${{ steps.get_version.outputs.tag }}
+#          name: Release v${{ steps.get_version.outputs.tag }}
+#          draft: false
+#          prerelease: false
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#
+#      # Загружаем APK в релиз
+#      - name: Upload APK to GitHub Release
+#        uses: softprops/action-gh-release@v1
+#        with:
+#          tag_name: v${{ steps.get_version.outputs.tag }}
+#          files: app/build/outputs/apk/release/app-release.apk
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
