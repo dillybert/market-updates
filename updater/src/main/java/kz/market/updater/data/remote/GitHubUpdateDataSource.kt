@@ -53,6 +53,7 @@ class GitHubUpdateDataSource @Inject constructor(
                 currentVersion = getCurrentVersionTag(),
                 apkUrl = apkUrl,
                 apkDigest = digest,
+                changelog = changelog
             )
         } catch (e: Exception) {
             Log.e("GitHubUpdateDataSource", "Error getting update metadata", e)
@@ -61,7 +62,7 @@ class GitHubUpdateDataSource @Inject constructor(
     }
 
     private fun getCurrentVersionTag(): String =
-        context.packageManager.getPackageInfo(context.packageName, 0).versionName ?: "0.0.0"
+        context.packageManager.getPackageInfo(context.packageName, 0).versionName ?: ""
 
     private fun isNetworkAvailable(): Boolean {
         val cm = context.getSystemService(ConnectivityManager::class.java)

@@ -4,7 +4,9 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import kz.market.data.repository.NotificationRepositoryImpl
 import kz.market.data.repository.SettingsRepositoryImpl
+import kz.market.domain.repository.NotificationRepository
 import kz.market.domain.repository.SettingsRepository
 import javax.inject.Singleton
 
@@ -16,4 +18,10 @@ interface RepositoryModule {
     fun bindSettingsRepository(
         settingsRepositoryImpl: SettingsRepositoryImpl
     ): SettingsRepository
+
+    @Binds
+    @Singleton
+    fun bindNotificationRepository(
+        notificationRepositoryImpl: NotificationRepositoryImpl
+    ): NotificationRepository
 }

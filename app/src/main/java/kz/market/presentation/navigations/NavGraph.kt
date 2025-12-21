@@ -9,6 +9,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navDeepLink
 import androidx.navigation.navigation
 import kz.market.presentation.screens.dashboard.DashboardScreen
 import kz.market.presentation.screens.expenses.ExpensesScreen
@@ -78,7 +79,13 @@ fun NavGraphBuilder.settingsNavGraph(
             )
         }
 
-        composable<UpdateDestination> {
+        composable<UpdateDestination>(
+            deepLinks = listOf(
+                navDeepLink {
+                    uriPattern = DeepLinks.UPDATE
+                }
+            )
+        ) {
             UpdateScreen(
                 onBackClick = {
                     navController.popBackStack()
