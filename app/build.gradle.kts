@@ -7,6 +7,8 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
     alias(libs.plugins.kotlinx.serialization)
+    alias(libs.plugins.firebase.services)
+    alias(libs.plugins.firebase.crashlytics)
 }
 
 val gitCommitCount = "git rev-list --count HEAD".runCommand().toInt()
@@ -77,6 +79,12 @@ dependencies {
     implementation(libs.hilt.android)
     implementation(libs.hilt.android.navigation.compose)
     ksp(libs.hilt.android.compiler)
+
+    implementation(platform(libs.firebase.bom))
+
+    implementation(libs.firebase.cloud.messaging)
+    implementation(libs.firebase.crashlytics)
+    implementation(libs.firebase.analytics)
 
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.androidx.core.splashscreen)

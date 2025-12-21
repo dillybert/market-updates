@@ -21,6 +21,7 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -28,6 +29,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
@@ -70,7 +72,7 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun RootContent(
-    themeOption: ThemeOptions
+    themeOption: ThemeOptions,
 ) {
     val navController = rememberNavController()
     val backStackEntry by navController.currentBackStackEntryAsState()
@@ -232,9 +234,13 @@ fun Root(
    val themeOption = settingsViewModel.themeOption.collectAsState()
 
    if (themeOption.value != null)
-       RootContent(themeOption = themeOption.value!!)
+       RootContent(
+           themeOption = themeOption.value!!
+       )
    else
-       RootContent(themeOption = ThemeOptions.SYSTEM)
+       RootContent(
+           themeOption = ThemeOptions.SYSTEM
+       )
 }
 
 @ThemedPreview
