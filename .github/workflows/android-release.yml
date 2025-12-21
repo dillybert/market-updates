@@ -20,6 +20,7 @@ jobs:
         uses: google-github-actions/auth@v2
         with:
           credentials_json: ${{ secrets.FCM_SERVICE_KEY }}
+          token_format: access_token
 
       # -----------------------------------
       # 🔔 Send FCM notification
