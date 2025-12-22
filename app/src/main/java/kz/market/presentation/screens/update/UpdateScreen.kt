@@ -16,6 +16,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import kz.market.domain.model.ThemeOptions
+import kz.market.logger.ApplicationEvent
+import kz.market.logger.LocalLogger
 import kz.market.ui.components.snackbar.MarketSnackBar
 import kz.market.ui.components.snackbar.SnackBarType
 import kz.market.ui.components.snackbar.rememberMarketSnackBarHostState
@@ -37,6 +39,8 @@ fun UpdateScreenContent(
     resetUpdateStatus: () -> Unit,
     snackBar: MarketSnackBar
 ) {
+    val logger = LocalLogger.current
+
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(

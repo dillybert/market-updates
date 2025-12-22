@@ -21,8 +21,10 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -32,6 +34,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kz.market.domain.model.ThemeOptions
+import kz.market.logger.ApplicationLogger
+import kz.market.logger.LocalLogger
 import kz.market.presentation.navigations.BottomNavigationDashboardDestination
 import kz.market.presentation.navigations.BottomNavigationExpensesDestination
 import kz.market.presentation.navigations.BottomNavigationPanelDestination
@@ -47,11 +51,12 @@ import kz.market.ui.components.snackbar.rememberMarketSnackBarHostState
 import kz.market.ui.icons.MarketIcons
 import kz.market.ui.preview.ThemedPreview
 import kz.market.ui.theme.MarketTheme
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     private val settingsViewModel: SettingsViewModel by viewModels()
-
+    @Inject lateinit var logger: ApplicationLogger
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val splashScreen = installSplashScreen()
@@ -63,7 +68,11 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         setContent {
-            Root()
+            CompositionLocalProvider(
+                LocalLogger provides logger
+            ) {
+                Root()
+            }
         }
     }
 }

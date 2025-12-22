@@ -25,6 +25,8 @@ fun NavigationGraph(
     snackBar: MarketSnackBar,
     modifier: Modifier = Modifier
 ) {
+    AnalyticsNavObserver(navController = navController)
+
     NavHost(
         navController = navController,
         startDestination = BottomNavigationPanelDestination::class,

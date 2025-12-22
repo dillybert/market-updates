@@ -46,6 +46,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import kz.market.domain.model.ThemeOptions
+import kz.market.logger.ApplicationEvent
+import kz.market.logger.LocalLogger
 import kz.market.presentation.screens.settings.viewmodel.SettingsViewModel
 import kz.market.ui.icons.MarketIcons
 import kz.market.ui.preview.ThemedPreview
@@ -62,6 +64,8 @@ fun SettingsScreenContent(
     onBackClick: () -> Unit,
     onUpdateClick: () -> Unit
 ) {
+    val logger = LocalLogger.current
+
     var themeSelectorExpanded by remember { mutableStateOf(false) }
     val themeName = when (themeOption) {
         ThemeOptions.LIGHT -> "Светлая"
@@ -244,7 +248,17 @@ fun SettingsScreenContent(
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = 7.dp),
+                            .padding(vertical = 7.dp)
+                            .clickable {
+                                logger.log(
+                                    ApplicationEvent.Action(
+                                        "click_start_download",
+                                        mapOf("update_status" to updateStatus.toString())
+                                    )
+                                )
+
+                                throw RuntimeException("Test exception")
+                            },
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
