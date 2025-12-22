@@ -103,34 +103,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 
-      # -----------------------------------
-      # Отправка FCM уведомления
-      # -----------------------------------
-      - name: Send FCM notification
-        run: |
-          echo "$FCM_SERVICE_KEY_JSON" > fcm.json
-
-          ACCESS_TOKEN=$(curl -s -X POST -H "Content-Type: application/json" \
-            -d @"fcm.json" \
-            "https://oauth2.googleapis.com/token?grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer" \
-          | jq -r '.access_token')
-
-          curl -X POST https://fcm.googleapis.com/v1/projects/YOUR_PROJECT_ID/messages:send \
-          -H "Authorization: Bearer $ACCESS_TOKEN" \
-          -H "Content-Type: application/json; charset=UTF-8" \
-          -d '{
-            "message": {
-              "topic": "updates",
-              "data": {
-                "title": "Обновление приложения",
-                "body": "Доступна версия приложения ${{ steps.get_version.outputs.tag }}. Нажмите для установки",
-                "channelId": "updates_channel",
-                "deepLink": "market://update"
-              }
-            }
-          }'
-        env:
-          FCM_SERVICE_KEY_JSON: ${{ secrets.FCM_SERVICE_KEY }}
 
 
 

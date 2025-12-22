@@ -30,22 +30,18 @@ class UpdateViewModel @Inject constructor(
     val updateStatus: StateFlow<UpdateStatus> = _updateStatus
 
     init {
+        checkForUpdates()
+
         installStateHolder.status
             .onEach { _updateStatus.value = it }
             .launchIn(viewModelScope)
-
-        checkForUpdates()
     }
 
     fun checkForUpdates() {
-        _updateStatus.value = UpdateStatus.Checking
         viewModelScope.launch {
             val updateMetaData = checkUpdatesUseCase()
-
             if (updateMetaData.isUpdateAvailable) {
                 _updateStatus.value = UpdateStatus.Available(updateMetaData)
-            } else {
-                _updateStatus.value = UpdateStatus.NoAvailable
             }
         }
     }

@@ -88,7 +88,7 @@ class UpdateDownloadWorker(
                 )
             )
         } catch (e: IOException) {
-            file.delete()
+            if (file.exists()) file.delete()
 
             if (e.message?.contains("ENOSPC") == true) {
                 return@withContext Result.failure(

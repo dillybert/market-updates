@@ -49,10 +49,4 @@ object MarketIcons {
 
     val Chevron_Right
         @Composable get() = painterResource(R.drawable.ic_chevron_right)
-
-    val Shield_Check
-        @Composable get() = painterResource(R.drawable.ic_shield_01)
-
-    val Download
-        @Composable get() = painterResource(R.drawable.ic_download_02)
 }

@@ -5,7 +5,6 @@ data class UpdateMetaData(
     val remoteVersion: String,
     val apkUrl: String,
     val apkDigest: String,
-    val changelog: String
 ) {
     val isEmpty: Boolean
         get() = this == EMPTY
@@ -18,8 +17,7 @@ data class UpdateMetaData(
             currentVersion = "",
             remoteVersion = "",
             apkUrl = "",
-            apkDigest = "",
-            changelog = ""
+            apkDigest = ""
         )
     }
 }

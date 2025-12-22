@@ -5,9 +5,6 @@ import java.io.File
 sealed class UpdateStatus {
     object Idle : UpdateStatus()
 
-    object Checking : UpdateStatus()
-    object NoAvailable : UpdateStatus()
-
     data class Available(
         val metaData: UpdateMetaData
     ) : UpdateStatus()
