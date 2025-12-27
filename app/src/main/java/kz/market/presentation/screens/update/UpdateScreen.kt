@@ -11,9 +11,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import kz.market.domain.model.ThemeOptions
 import kz.market.logger.ApplicationEvent
@@ -22,6 +25,7 @@ import kz.market.ui.components.snackbar.MarketSnackBar
 import kz.market.ui.components.snackbar.SnackBarType
 import kz.market.ui.components.snackbar.rememberMarketSnackBarHostState
 import kz.market.ui.icons.MarketIcons
+import kz.market.ui.preview.NoOpLogger
 import kz.market.ui.preview.ThemedPreview
 import kz.market.ui.theme.MarketTheme
 import kz.market.updater.domain.model.UpdateMetaData
@@ -39,8 +43,6 @@ fun UpdateScreenContent(
     resetUpdateStatus: () -> Unit,
     snackBar: MarketSnackBar
 ) {
-    val logger = LocalLogger.current
-
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -63,21 +65,27 @@ fun UpdateScreenContent(
             )
         }
     ) { innerPadding ->
-        Column {
+        Column(
+            modifier = Modifier.padding(horizontal = 16.dp)
+        ) {
             Text(
                 text = "UpdateScreenContent preview",
                 modifier = Modifier.padding(innerPadding)
             )
             Button(
+                shape = MaterialTheme.shapes.medium,
                 onClick = {
                     snackBar.showSnackBar(
                         message = "Start download",
-                        type = SnackBarType.Success,
+                        type = SnackBarType.Info,
                         actionLabel = "Cancel"
                     )
                 }
             ) {
-                Text(text = "Start download")
+                Text(
+                    text = "Start download",
+                    fontWeight = FontWeight.Medium
+                )
             }
         }
     }
@@ -105,16 +113,20 @@ fun UpdateScreen(
 @ThemedPreview
 @Composable
 private fun UpdateScreenPreview() {
-    MarketTheme(themeOption = ThemeOptions.SYSTEM) {
-        UpdateScreenContent(
-            onBackClick = {},
-            updateStatus = UpdateStatus.Idle,
-            startDownload = {},
-            installUpdate = { _, _ -> },
-            resetUpdateStatus = {},
-            snackBar = MarketSnackBar(
-                hostState = rememberMarketSnackBarHostState()
+    CompositionLocalProvider(
+        LocalLogger provides NoOpLogger()
+    ) {
+        MarketTheme(themeOption = ThemeOptions.SYSTEM) {
+            UpdateScreenContent(
+                onBackClick = {},
+                updateStatus = UpdateStatus.Idle,
+                startDownload = {},
+                installUpdate = { _, _ -> },
+                resetUpdateStatus = {},
+                snackBar = MarketSnackBar(
+                    hostState = rememberMarketSnackBarHostState()
+                )
             )
-        )
+        }
     }
 }

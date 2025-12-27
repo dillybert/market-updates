@@ -49,6 +49,7 @@ import kz.market.ui.components.snackbar.MarketSnackBarHost
 import kz.market.ui.components.snackbar.rememberMarketSnackBar
 import kz.market.ui.components.snackbar.rememberMarketSnackBarHostState
 import kz.market.ui.icons.MarketIcons
+import kz.market.ui.preview.NoOpLogger
 import kz.market.ui.preview.ThemedPreview
 import kz.market.ui.theme.MarketTheme
 import javax.inject.Inject
@@ -249,7 +250,11 @@ fun Root(
 @ThemedPreview
 @Composable
 fun GreetingPreview() {
-    RootContent(
-        themeOption = ThemeOptions.SYSTEM
-    )
+    CompositionLocalProvider(
+        LocalLogger provides NoOpLogger()
+    ) {
+        RootContent(
+            themeOption = ThemeOptions.SYSTEM
+        )
+    }
 }
